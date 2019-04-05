@@ -1,8 +1,32 @@
+<template>
+    <div class="form-group row">
+        <label class="col-form-label col-sm-2 text-md-right">省市区</label>
+        <div class="col-sm-3">
+            <select class="form-control" v-model="provinceId">
+                <option value="">选择省</option>
+                <option v-for="(name, id) in provinces" :value="id">{{ name }}</option>
+            </select>
+        </div>
+        <div class="col-sm-3">
+            <select class="form-control" v-model="cityId">
+                <option value="">选择市</option>
+                <option v-for="(name, id) in cities" :value="id">{{ name }}</option>
+            </select>
+        </div>
+        <div class="col-sm-3">
+            <select class="form-control" v-model="districtId">
+                <option value="">选择区</option>
+                <option v-for="(name, id) in districts" :value="id">{{ name }}</option>
+            </select>
+        </div>
+    </div>
+</template>
+<script>
 const addressData=require('china-area-data/v3/data');
 import _ from 'lodash';
 
 // 注册一个名为 select-district 的 Vue 组件
-Vue.component('select-district', {
+export default  {
     // 定义组件的属性
     props: {
         // 用来初始化省市区的值，在编辑时会用到
@@ -55,6 +79,7 @@ Vue.component('select-district', {
         // 当选择的区发生改变时触发
         districtId() {
             // 触发一个名为 change 的 Vue 事件，事件的值就是当前选中的省市区名称，格式为数组
+            console.log([this.provinces[this.provinceId], this.cities[this.cityId], this.districts[this.districtId]])
             this.$emit('change', [this.provinces[this.provinceId], this.cities[this.cityId], this.districts[this.districtId]]);
         },
     },
@@ -103,4 +128,5 @@ Vue.component('select-district', {
             this.districtId = districtId;
         }
     }
-});
+};
+</script>
