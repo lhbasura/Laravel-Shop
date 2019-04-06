@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserAddressRequest;
 use App\Models\UserAddress;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class UserAddressesController extends Controller
@@ -11,7 +12,7 @@ class UserAddressesController extends Controller
     public function index(Request $request)
     {
         return view('user_addresses.index', [
-            'addresses' => $request->user()->addresses,
+            'addresses' => Auth::user()->addresses,
         ]);
     }
     public function create(){
