@@ -85,6 +85,7 @@ export default  {
     },
     // 组件初始化时会调用这个方法
     created() {
+        console.log(this.initValue);
         this.setFromValue(this.initValue);
     },
     methods: {
