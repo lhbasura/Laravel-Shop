@@ -1896,6 +1896,7 @@ var addressData = __webpack_require__(/*! china-area-data/v3/data */ "./node_mod
   },
   // 组件初始化时会调用这个方法
   created: function created() {
+    console.log(this.initValue);
     this.setFromValue(this.initValue);
   },
   methods: {
@@ -53338,6 +53339,10 @@ module.exports = function(module) {
  */
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
+__webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+
+__webpack_require__(/*! sweetalert */ "./node_modules/sweetalert/dist/sweetalert.min.js");
+
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /**
  * The following block of code may be used to automatically register your
@@ -53372,8 +53377,6 @@ var app = new Vue({
   \***********************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(/*! sweetalert */ "./node_modules/sweetalert/dist/sweetalert.min.js");
 
 window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /**
