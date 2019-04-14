@@ -12,6 +12,11 @@ Route::group([
     $router->get('/', 'HomeController@index');
     $router->get('users', 'UsersController@index');
     $router->get('products', 'ProductsController@index');
-    $router->get('products/create', 'ProductsController@create');
     $router->post('products', 'ProductsController@store');
+    $router->get('products/create', 'ProductsController@create');
+    $router->get('products/{id}', 'ProductsController@show');
+    $router->delete('products/{id}', 'ProductsController@destroy');
+    $router->put('products/{id}', 'ProductsController@update');
+    $router->get('products/{id}/edit', 'ProductsController@edit');
+
 });
