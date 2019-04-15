@@ -27,9 +27,11 @@ Route::group(['middleware' => ['auth', 'verified' , 'address']], function() {
     Route::delete('products/{product}/favorite', 'ProductsController@disfavor')->name('products.disfavor');
 
 
+
 });
 Route::redirect('/', '/products')->name('root');
 Route::get('products', 'ProductsController@index')->name('products.index');
 Route::get('products', 'ProductsController@index')->name('products.index');
+Route::get('products/favorites', 'ProductsController@favorites')->name('products.favorites');
 Route::get('products/{product}', 'ProductsController@show')->name('products.show');
 
