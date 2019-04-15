@@ -15,8 +15,11 @@
                             <div class="price"><label>价格</label><em>￥</em><span>{{ $product->price }}</span></div>
                             <div class="sales_and_reviews">
                                 <div class="sold_count">累计销量 <span class="count">{{ $product->sold_count }}</span></div>
-                                <div class="review_count">累计评价 <span class="count">{{ $product->review_count }}</span></div>
-                                <div class="rating" title="评分 {{ $product->rating }}">评分 <span class="count">{{ str_repeat('★', floor($product->rating)) }}{{ str_repeat('☆', 5 - floor($product->rating)) }}</span></div>
+                                <div class="review_count">累计评价 <span class="count">{{ $product->review_count }}</span>
+                                </div>
+                                <div class="rating" title="评分 {{ $product->rating }}">评分 <span
+                                            class="count">{{ str_repeat('★', floor($product->rating)) }}{{ str_repeat('☆', 5 - floor($product->rating)) }}</span>
+                                </div>
                             </div>
                             <div class="skus">
                                 <label>选择</label>
@@ -29,12 +32,16 @@
                                                 data-toggle="tooltip"
                                                 title="{{ $sku->description }}"
                                                 data-placement="bottom">
-                                            <input type="radio" name="skus" autocomplete="off" value="{{ $sku->id }}"> {{ $sku->title }}
+                                            <input type="radio" name="skus" autocomplete="off"
+                                                   value="{{ $sku->id }}"> {{ $sku->title }}
                                         </label>
                                     @endforeach
                                 </div>
                             </div>
-                            <div class="cart_amount"><label>数量</label><input type="text" class="form-control form-control-sm" value="1"><span>件</span><span class="stock"></span></div>
+                            <div class="cart_amount"><label>数量</label><input type="text"
+                                                                             class="form-control form-control-sm"
+                                                                             value="1"><span>件</span><span
+                                        class="stock"></span></div>
                             <div class="buttons">
                                 @if($favored)
                                     <button class="btn btn-danger btn-disfavor">取消收藏</button>
@@ -48,10 +55,12 @@
                     <div class="product-detail">
                         <ul class="nav nav-tabs" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" href="#product-detail-tab" aria-controls="product-detail-tab" role="tab" data-toggle="tab" aria-selected="true">商品详情</a>
+                                <a class="nav-link active" href="#product-detail-tab" aria-controls="product-detail-tab"
+                                   role="tab" data-toggle="tab" aria-selected="true">商品详情</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#product-reviews-tab" aria-controls="product-reviews-tab" role="tab" data-toggle="tab" aria-selected="false">用户评价</a>
+                                <a class="nav-link" href="#product-reviews-tab" aria-controls="product-reviews-tab"
+                                   role="tab" data-toggle="tab" aria-selected="false">用户评价</a>
                             </li>
                         </ul>
                         <div class="tab-content">
@@ -71,42 +80,50 @@
 @section('scriptsAfterJs')
     <script>
         $(document).ready(function () {
-            $('[data-toggle="tooltip"]').tooltip({trigger: 'hover'});
-            $('.sku-btn').click(function () {
-                $('.product-info .price span').text($(this).data('price'));
-                $('.product-info .stock').text('库存：' + $(this).data('stock') + '件');
-            });
+                $('[data-toggle="tooltip"]').tooltip({trigger: 'hover'});
+                $('.sku-btn').click(function () {
+                    $('.product-info .price span').text($(this).data('price'));
+                    $('.product-info .stock').text('库存：' + $(this).data('stock') + '件');
+                });
 
-            // 监听收藏按钮的点击事件
-            $('.btn-favor').click(function () {
-                axios.post('{{ route('products.favor', ['product' => $product->id]) }}')
-                    .then(function () {
-                        swal('操作成功', '', 'success')
-                            .then(function () {  // 这里加了一个 then() 方法
-                                location.reload();
-                            });
-                    }, function(error) {
-                        if (error.response && error.response.status === 401) {
-                            swal('请先登录', '', 'error');
-                        }  else if (error.response && error.response.data.msg) {
-                            swal(error.response.data.msg, '', 'error');
-                        }  else {
-                            swal('系统错误', '', 'error');
-                        }
-                    });
-            });
-
-            $('.btn-disfavor').click(function () {
-                axios.delete('{{ route('products.disfavor', ['product' => $product->id]) }}')
-                    .then(function () {
-                        swal('操作成功', '', 'success')
+                $('body')
+                    .on('click', '.btn-favor', function () {
+                        $btn_favor = $(this);
+                        axios.post('{{ route('products.favor', ['product' => $product->id]) }}')
                             .then(function () {
-                                location.reload();
+                                swal('操作成功', '', 'success')
+                                    .then(function () {  // 这里加了一个 then() 方法
+                                        // location.reload();
+                                        $btn_favor.removeClass('btn-success btn-favor');
+                                        $btn_favor.addClass('btn-danger btn-disfavor');
+                                        $btn_favor.text('取消收藏');
+                                        console.log('收藏成功');
+                                    });
+                            }, function (error) {
+                                if (error.response && error.response.status === 401) {
+                                    swal('请先登录', '', 'error');
+                                } else if (error.response && error.response.data.msg) {
+                                    swal(error.response.data.msg, '', 'error');
+                                } else {
+                                    swal('系统错误', '', 'error');
+                                }
                             });
-                    });
-            });
-
-        });
+                    })
+                    .on('click', '.btn-disfavor', function () {
+                        $btn_disfavor = $(this);
+                        axios.delete('{{ route('products.disfavor', ['product' => $product->id]) }}')
+                            .then(function () {
+                                swal('操作成功', '', 'success')
+                                    .then(function () {
+                                        $btn_disfavor.addClass('btn-success btn-favor');
+                                        $btn_disfavor.removeClass('btn-danger btn-disfavor');
+                                        $btn_disfavor.text('❤ 收藏');
+                                        console.log('取消收藏成功');
+                                    });
+                            });
+                    })
+            }
+        );
     </script>
 @endsection
 
