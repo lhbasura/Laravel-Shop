@@ -5,7 +5,6 @@ use App\Http\Requests\UserAddressRequest;
 use App\Models\UserAddress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 class UserAddressesController extends Controller
 {

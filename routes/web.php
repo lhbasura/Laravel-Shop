@@ -24,13 +24,14 @@ Route::group(['middleware' => ['auth', 'verified' ]], function() {
         Route::post('user_addresses', 'UserAddressesController@store')->name('user_addresses.store');
         Route::put('user_addresses/{user_address}', 'UserAddressesController@update')->name('user_addresses.update');
         Route::delete('user_addresses/{user_address}', 'UserAddressesController@destroy')->name('user_addresses.destroy');
-
     });
 
+    Route::get('cart', 'CartController@index')->name('cart.index');
     Route::post('products/{product}/favorite', 'ProductsController@favor')->name('products.favor');
     Route::delete('products/{product}/favorite', 'ProductsController@disfavor')->name('products.disfavor');
 
     Route::post('cart', 'CartController@add')->name('cart.add');
+    Route::delete('cart/{sku}', 'CartController@remove')->name('cart.remove');
 });
 
 
