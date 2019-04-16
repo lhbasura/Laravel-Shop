@@ -16,7 +16,7 @@ class UserAddressesMiddleware
      */
     public function handle($request, Closure $next)
     {
-     //   $this->authorize('own', $request->user_address);
+
         return $next($request);
     }
 }

@@ -80,50 +80,78 @@
 @section('scriptsAfterJs')
     <script>
         $(document).ready(function () {
-                $('[data-toggle="tooltip"]').tooltip({trigger: 'hover'});
-                $('.sku-btn').click(function () {
-                    $('.product-info .price span').text($(this).data('price'));
-                    $('.product-info .stock').text('库存：' + $(this).data('stock') + '件');
-                });
+            $('[data-toggle="tooltip"]').tooltip({trigger: 'hover'});
+            $('.sku-btn').click(function () {
+                $('.product-info .price span').text($(this).data('price'));
+                $('.product-info .stock').text('库存：' + $(this).data('stock') + '件');
+            });
 
-                $('body')
-                    .on('click', '.btn-favor', function () {
-                        $btn_favor = $(this);
-                        axios.post('{{ route('products.favor', ['product' => $product->id]) }}')
-                            .then(function () {
-                                swal('操作成功', '', 'success')
-                                    .then(function () {  // 这里加了一个 then() 方法
-                                        // location.reload();
-                                        $btn_favor.removeClass('btn-success btn-favor');
-                                        $btn_favor.addClass('btn-danger btn-disfavor');
-                                        $btn_favor.text('取消收藏');
-                                        console.log('收藏成功');
-                                    });
-                            }, function (error) {
-                                if (error.response && error.response.status === 401) {
-                                    swal('请先登录', '', 'error');
-                                } else if (error.response && error.response.data.msg) {
-                                    swal(error.response.data.msg, '', 'error');
-                                } else {
-                                    swal('系统错误', '', 'error');
-                                }
+            $('body').on('click', '.btn-favor', function () {
+                $btn_favor = $(this);
+                axios.post('{{ route('products.favor', ['product' => $product->id]) }}')
+                    .then(function () {
+                        swal('操作成功', '', 'success')
+                            .then(function () {  // 这里加了一个 then() 方法
+                                // location.reload();
+                                $btn_favor.removeClass('btn-success btn-favor');
+                                $btn_favor.addClass('btn-danger btn-disfavor');
+                                $btn_favor.text('取消收藏');
+                                console.log('收藏成功');
                             });
-                    })
-                    .on('click', '.btn-disfavor', function () {
-                        $btn_disfavor = $(this);
-                        axios.delete('{{ route('products.disfavor', ['product' => $product->id]) }}')
+                    }, function (error) {
+                        if (error.response && error.response.status === 401) {
+                            swal('请先登录', '', 'error');
+                        } else if (error.response && error.response.data.msg) {
+                            swal(error.response.data.msg, '', 'error');
+                        } else {
+                            swal('系统错误', '', 'error');
+                        }
+                    });
+            }).on('click', '.btn-disfavor', function () {
+                $btn_disfavor = $(this);
+                axios.delete('{{ route('products.disfavor', ['product' => $product->id]) }}')
+                    .then(function () {
+                        swal('操作成功', '', 'success')
                             .then(function () {
-                                swal('操作成功', '', 'success')
-                                    .then(function () {
-                                        $btn_disfavor.addClass('btn-success btn-favor');
-                                        $btn_disfavor.removeClass('btn-danger btn-disfavor');
-                                        $btn_disfavor.text('❤ 收藏');
-                                        console.log('取消收藏成功');
-                                    });
+                                $btn_disfavor.addClass('btn-success btn-favor');
+                                $btn_disfavor.removeClass('btn-danger btn-disfavor');
+                                $btn_disfavor.text('❤ 收藏');
+                                console.log('取消收藏成功');
                             });
-                    })
-            }
-        );
+                    });
+            }).on('click', '.btn-add-to-cart', function () {
+
+                // 请求加入购物车接口
+                axios.post('{{ route('cart.add') }}', {
+                    sku_id: $('label.active input[name=skus]').val(),
+                    amount: $('.cart_amount input').val(),
+                }).then(function () { // 请求成功执行此回调
+                    swal('加入购物车成功', '', 'success');
+                }, function (error) { // 请求失败执行此回调
+                    if (error.response.status === 401) {
+
+                        // http 状态码为 401 代表用户未登陆
+                        swal('请先登录', '', 'error');
+
+                    } else if (error.response.status === 422) {
+
+                        // http 状态码为 422 代表用户输入校验失败
+                        var html = '<div>';
+                        _.each(error.response.data.errors, function (errors) {
+                            _.each(errors, function (error) {
+                                html += error + '<br>';
+                            })
+                        });
+                        html += '</div>';
+                        swal({content: $(html)[0], icon: 'error'})
+                    } else {
+                        console.log(error)
+                        // 其他情况应该是系统挂了
+                        swal('系统错误', '', 'error');
+                    }
+                })
+            });
+        });
     </script>
 @endsection
 
