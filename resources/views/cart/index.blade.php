@@ -19,19 +19,22 @@
                         </thead>
                         <tbody class="product_list">
                         @foreach($cartItems as $item)
-                            <tr data-id="{{ $item->productSku->id }}">
+                            <tr id="cart_{{ $item->productSku->id }}" data-id="{{ $item->productSku->id }}">
                                 <td>
-                                    <input type="checkbox" name="select" value="{{ $item->productSku->id }}" {{ $item->productSku->product->on_sale ? 'checked' : 'disabled' }}>
+                                    <input type="checkbox" name="select"
+                                           value="{{ $item->productSku->id }}" {{ $item->productSku->product->on_sale ? 'checked' : 'disabled' }}>
                                 </td>
                                 <td class="product_info">
                                     <div class="preview">
-                                        <a target="_blank" href="{{ route('products.show', [$item->productSku->product_id]) }}">
+                                        <a target="_blank"
+                                           href="{{ route('products.show', [$item->productSku->product_id]) }}">
                                             <img src="{{ $item->productSku->product->image_url }}">
                                         </a>
                                     </div>
                                     <div @if(!$item->productSku->product->on_sale) class="not_on_sale" @endif>
               <span class="product_title">
-                <a target="_blank" href="{{ route('products.show', [$item->productSku->product_id]) }}">{{ $item->productSku->product->title }}</a>
+                <a target="_blank"
+                   href="{{ route('products.show', [$item->productSku->product_id]) }}">{{ $item->productSku->product->title }}</a>
               </span>
                                         <span class="sku_title">{{ $item->productSku->title }}</span>
                                         @if(!$item->productSku->product->on_sale)
@@ -41,7 +44,9 @@
                                 </td>
                                 <td><span class="price">￥{{ $item->productSku->price }}</span></td>
                                 <td>
-                                    <input type="text" class="form-control form-control-sm amount" @if(!$item->productSku->product->on_sale) disabled @endif name="amount" value="{{ $item->amount }}">
+                                    <input type="text" class="form-control form-control-sm amount"
+                                           @if(!$item->productSku->product->on_sale) disabled @endif name="amount"
+                                           value="{{ $item->amount }}">
                                 </td>
                                 <td>
                                     <button class="btn btn-sm btn-danger btn-remove">移除</button>
@@ -69,26 +74,26 @@
                     icon: "warning",
                     buttons: ['取消', '确定'],
                     dangerMode: true,
-                })
-                    .then(function(willDelete) {
-                        // 用户点击 确定 按钮，willDelete 的值就会是 true，否则为 false
-                        if (!willDelete) {
-                            return;
-                        }
-                        axios.delete('/cart/' + id)
-                            .then(function () {
-                                location.reload();
-                            })
-                    });
+                }).then(function (willDelete) {
+                    console.log('willDelete:', willDelete)
+                    // 用户点击 确定 按钮，willDelete 的值就会是 true，否则为 false
+                    if (!willDelete) {
+                        return;
+                    }
+                    axios.delete('/cart/' + id)
+                        .then(function () {
+                            $('#cart_'+id).hide();
+                        })
+                });
             });
 
-            $('#select-all').change(function() {
+            $('#select-all').change(function () {
                 // 获取单选框的选中状态
                 // prop() 方法可以知道标签中是否包含某个属性，当单选框被勾选时，对应的标签就会新增一个 checked 的属性
                 var checked = $(this).prop('checked');
                 // 获取所有 name=select 并且不带有 disabled 属性的勾选框
                 // 对于已经下架的商品我们不希望对应的勾选框会被选中，因此我们需要加上 :not([disabled]) 这个条件
-                $('input[name=select][type=checkbox]:not([disabled])').each(function() {
+                $('input[name=select][type=checkbox]:not([disabled])').each(function () {
                     // 将其勾选状态设为与目标单选框一致
                     $(this).prop('checked', checked);
                 });
