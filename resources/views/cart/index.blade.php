@@ -109,7 +109,7 @@
                     }
                     axios.delete('/cart/' + id)
                         .then(function () {
-                            $('#cart_'+id).hide();
+                            $('#cart_' + id).hide();
                         })
                 });
             });
@@ -156,8 +156,8 @@
                 });
                 axios.post('{{ route('orders.store') }}', req)
                     .then(function (response) {
-                        swal('订单提交成功', '', 'success').then(function () {
-                            location.reload();
+                        swal('订单提交成功', '', 'success').then(() => {
+                            location.href = '/orders/' + response.data.id;
                         });
                     }, function (error) {
                         if (error.response.status === 422) {
@@ -165,7 +165,7 @@
                             var html = '<div>';
                             _.each(error.response.data.errors, function (errors) {
                                 _.each(errors, function (error) {
-                                    html += error+'<br>';
+                                    html += error + '<br>';
                                 })
                             });
                             html += '</div>';
