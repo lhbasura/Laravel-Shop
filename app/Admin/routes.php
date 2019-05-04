@@ -18,5 +18,6 @@ Route::group([
     $router->delete('products/{id}', 'ProductsController@destroy');
     $router->put('products/{id}', 'ProductsController@update');
     $router->get('products/{id}/edit', 'ProductsController@edit');
+    $router->get('orders', 'OrdersController@index')->name('admin.orders.index');
 
 });
