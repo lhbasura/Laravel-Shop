@@ -7,6 +7,7 @@ use App\Exceptions\InvalidRequestException;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
@@ -35,10 +36,12 @@ class PaymentController extends Controller
         } catch (\Exception $e) {
             return view('pages.error', ['msg' => '数据不正确']);
         }
+        Log::debug("go return");
         return view('pages.success', ['msg' => '付款成功']);
     }
     public function alipayNotify()
     {
+        Log::debug("go notification");
         // 校验输入参数
         $data  = app('alipay')->verify();
         // 如果订单状态不是成功或者结束，则不走后续的逻辑
