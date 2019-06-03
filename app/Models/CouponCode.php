@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use App\Exceptions\CouponCodeUnavailableException;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+
 
 class CouponCode extends Model
 {
